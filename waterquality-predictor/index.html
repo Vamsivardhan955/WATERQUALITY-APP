@@ -4,76 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Water Quality Check</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(to bottom, #a0c4ff, #caffbf);
-            color: #333;
-        }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #007BFF;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            color: #333;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        .result.suitable {
-            background-color: #e7fbe7;
-            border: 1px solid #b2d8b2;
-            color: #2b7a2b;
-        }
-        .result.unsuitable {
-            background-color: #fbe7e7;
-            border: 1px solid #e4b2b2;
-            color: #a72b2b;
-        }
-        .buttons {
-            display: flex;
-            gap: 10px;
-        }
-        .buttons button {
-            flex: 1;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
@@ -81,31 +12,28 @@
         <form id="waterQualityForm">
             <label for="ph">pH Value (0 to 14):</label>
             <input type="number" id="ph" step="0.1" min="0" max="14" required>
-
+            
             <label for="hardness">Hardness (mg/L):</label>
             <input type="number" id="hardness" required>
-
+            
             <label for="solids">Solids (ppm):</label>
             <input type="number" id="solids" required>
-
-            <label for="chloramines">Chloramines (ppm):</label>
-            <input type="number" id="chloramines" step="0.1" required>
-
-            <label for="sulfate">Sulfate (mg/L):</label>
-            <input type="number" id="sulfate" required>
-
-            <label for="conductivity">Conductivity (uS/cm):</label>
-            <input type="number" id="conductivity" required>
-
-            <label for="organicCarbon">Organic Carbon (ppm):</label>
-            <input type="number" id="organicCarbon" step="0.1" required>
-
-            <label for="trihalomethanes">Trihalomethanes (ug/L):</label>
-            <input type="number" id="trihalomethanes" step="0.1" required>
-
+            
+            <label for="dissolvedOxygen">Dissolved Oxygen (mg/L):</label>
+            <input type="number" id="dissolvedOxygen" step="0.1" required>
+            
+            <label for="nitrate">Nitrate (mg/L):</label>
+            <input type="number" id="nitrate" step="0.1" required>
+            
             <label for="turbidity">Turbidity (NTU):</label>
             <input type="number" id="turbidity" step="0.1" required>
-
+            
+            <label for="chlorine">Chlorine (mg/L):</label>
+            <input type="number" id="chlorine" step="0.1" required>
+            
+            <label for="fluoride">Fluoride (mg/L):</label>
+            <input type="number" id="fluoride" step="0.1" required>
+            
             <div class="buttons">
                 <button type="button" onclick="checkWaterQuality()">Check Water Quality</button>
                 <button type="reset">Restart</button>
@@ -114,47 +42,6 @@
         <div id="result" class="result" style="display: none;"></div>
     </div>
 
-    <script>
-        function checkWaterQuality() {
-            const ph = parseFloat(document.getElementById('ph').value);
-            const hardness = parseFloat(document.getElementById('hardness').value);
-            const solids = parseFloat(document.getElementById('solids').value);
-            const chloramines = parseFloat(document.getElementById('chloramines').value);
-            const sulfate = parseFloat(document.getElementById('sulfate').value);
-            const conductivity = parseFloat(document.getElementById('conductivity').value);
-            const organicCarbon = parseFloat(document.getElementById('organicCarbon').value);
-            const trihalomethanes = parseFloat(document.getElementById('trihalomethanes').value);
-            const turbidity = parseFloat(document.getElementById('turbidity').value);
-
-            const parameters = [
-                { name: "pH", value: ph, min: 6.5, max: 8.5 },
-                { name: "Hardness", value: hardness, min: 0, max: 300 },
-                { name: "Solids", value: solids, min: 0, max: 500 },
-                { name: "Chloramines", value: chloramines, min: 0, max: 4 },
-                { name: "Sulfate", value: sulfate, min: 0, max: 250 },
-                { name: "Conductivity", value: conductivity, min: 50, max: 1500 },
-                { name: "Organic Carbon", value: organicCarbon, min: 0, max: 5 },
-                { name: "Trihalomethanes", value: trihalomethanes, min: 0, max: 80 },
-                { name: "Turbidity", value: turbidity, min: 0, max: 5 }
-            ];
-
-            let result = "";
-            let isSuitable = true;
-
-            parameters.forEach(param => {
-                if (param.value < param.min || param.value > param.max) {
-                    result += `Unsuitable: ${param.name} (${param.value}) exceeds the safe limit (${param.min} to ${param.max}).\n`;
-                    isSuitable = false;
-                } else {
-                    result += `Suitable: ${param.name} (${param.value}) is within the safe limit (${param.min} to ${param.max}).\n`;
-                }
-            });
-
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block';
-            resultDiv.className = `result ${isSuitable ? 'suitable' : 'unsuitable'}`;
-            resultDiv.textContent = result.trim();
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
